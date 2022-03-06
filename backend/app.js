@@ -1,5 +1,5 @@
-const httpServer = require('http').createServer();
-const io = require('socket.io')(httpServer, {
+const server = require('http').createServer();
+const io = require('socket.io')(server, {
   cors: {
     origin: 'http://localhost:3000',
     method: ['GET', 'POST'],
@@ -7,10 +7,15 @@ const io = require('socket.io')(httpServer, {
 })
 
 io.on("connection", (socket) => {
-  console.log('connection')
   socket.on("init", (payload) => {
     console.log(payload)
   })
+  socket.on("send message", (item) => {
+    console.log(item.nickname + " : " + item.message);
+    io.emit("receive message", { nickname: item.nickname, message: item.message });
+  });
 })
 
-httpServer.listen(80)
+server.listen(727, () => {
+  console.log('Listening on port 727')
+})
