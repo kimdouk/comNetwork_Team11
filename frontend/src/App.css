@@ -1,5 +1,9 @@
-.App {
-  text-align: center;
+html, body {
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 .App-logo {
@@ -35,4 +39,35 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.chat-list-wrapper {
+  width: 100%;
+  height: 100vh;
+  padding: 10px;
+}
+
+.chat-box {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  padding: 10px;
+  border: 1px solid #000;
+}
+
+.chat {
+  line-height: 30px;
+  text-align: center;
+  max-width: 40%;
+  height: 30px;
+  border-radius: 10px;
+  background-color: #ddd;
+}
+
+.chat-input-wrapper {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60px;
 }
