@@ -6,7 +6,7 @@ export default function MainPage() {
   return (
     <div>
       <p>main</p>
-      <Link to="/game">게임</Link>
+      <Link to="/bridge">게임</Link>
     </div>
   )
 }
