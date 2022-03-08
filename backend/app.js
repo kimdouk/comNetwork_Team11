@@ -6,13 +6,70 @@ const io = require('socket.io')(server, {
   },
 })
 
+let isEmpty = true;
+
+const participants = {
+  owner: {},
+  counter: {}
+};
+
+function judge (num1, num2) {
+  num1 = num1.split('')
+  num2 = num2.split('')
+
+  let strike = 0
+  let ball = 0
+  let result = ''
+  
+  for (let i = 0; i < num1.length; i++) {
+    for (let j = 0; j < num2.length; j++) {
+      if (num1[i] === num2[j]) {
+        if (i === j) {
+          strike += 1
+        } else {
+          ball += 1
+        }
+      }
+    }
+  }
+
+  if (strike || ball) {
+    if (strike) {
+      result += `${strike}S`
+    }
+    if (ball) {
+      result += `${ball}B`
+    }
+  }
+  else {
+    result = 'Out'
+  }
+  return result
+}
+
 io.on("connection", (socket) => {
   socket.on("init", (payload) => {
     console.log(payload)
+    if (isEmpty) {
+      participants.owner = payload
+      participants.owner.role = 'owner'
+      participants.owner.socket_id = socket.id
+      io.to(socket.id).emit('set role', 'owner')
+      isEmpty = false
+    } else {
+      participants.counter = payload
+      participants.counter.role = 'counter'
+      participants.counter.socket_id = socket.id
+      io.to(socket.id).emit('set role', 'counter')
+    }
+    console.log(participants)
   })
   socket.on("send message", (item) => {
-    console.log(item.nickname + " : " + item.message);
-    io.emit("receive message", { nickname: item.nickname, message: item.message });
+    io.emit("receive message", {...item});
+
+    const counter = (item.role === 'owner') ? participants.counter : participants.owner
+    const message = judge(counter.number, item.message)
+    io.emit("receive message", {nickname: counter.nickname, role: counter.role, message});
   });
 })
 
