@@ -53,6 +53,7 @@ html, body {
   height: 80vh;
   padding: 10px;
   border: 1px solid #000;
+  overflow: auto;
 }
 
 .chat-wrapper {

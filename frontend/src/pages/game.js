@@ -14,9 +14,11 @@ export default function GamePage() {
 
   useEffect(() => {
     const {nickname, number} = window.history.state
+
     setChat(chat => {
       return {...chat, nickname}
     })
+
     socket.emit('init', {
       nickname,
       number
@@ -24,6 +26,9 @@ export default function GamePage() {
 
     socket.on('receive message', (message) => {
       setChatList(chatList => chatList.concat(message))
+      
+      const chatBox = document.querySelector(".chat-box")
+      chatBox.scrollTop = chatBox.scrollHeight
     })
 
     socket.on('set role', (role) => {
