@@ -8,35 +8,52 @@ export default function GamePage() {
   const [chatList, setChatList] = useState([]);
   const [chat, setChat] = useState({
     nickname: '',
+    role: '',
     message: '',
-  })
+  });
 
   useEffect(() => {
-    socket.emit('init', '접속했습니다.')
+    const {nickname, number} = window.history.state
+    setChat(chat => {
+      return {...chat, nickname}
+    })
+    socket.emit('init', {
+      nickname,
+      number
+    })
 
     socket.on('receive message', (message) => {
       setChatList(chatList => chatList.concat(message))
     })
-  }, [])
-  useEffect(() => {
+
+    socket.on('set role', (role) => {
+      setChat(chat => {
+        return {...chat, role}
+      })
+    })
+
     return () => {
       socket.close()
     }
   }, [])
   return (
     <div className="App">
-      <ChatList chatList={chatList} />
+      <ChatList role = {chat.role} chatList={chatList} />
       <ChatInput chat={chat} setChat={setChat} />
     </div>
   );
 }
 
-function ChatList({chatList}) {
+function ChatList({role, chatList}) {
   return (
     <div className="chat-list-wrapper">
       <section className="chat-box">
         {chatList && chatList.map((chat, index) => (
-          <p key={index} className="chat">{chat.nickname}: {chat.message}</p>
+          <div key={index} className="chat-wrapper" style={{
+            justifyContent: `${chat.role === role ? 'end' : 'start'}`
+          }}>
+            <p className="chat">{chat.nickname}: {chat.message}</p>
+          </div>
         ))}
       </section>
     </div>
@@ -51,15 +68,11 @@ function ChatInput({chat, setChat}) {
     })
   }
   const postChat = () => {
-    socket.emit('send message', {
-      nickname: chat.nickname,
-      message: chat.message
-    })
+    socket.emit('send message', {...chat})
   }
 
   return (
     <div className="chat-input-wrapper">
-      <input name="nickname" value={chat.nickname} onChange={changeInput} />
       <input name="message" value={chat.message} onChange={changeInput} />
       <button onClick={postChat}>전송</button>
     </div>
