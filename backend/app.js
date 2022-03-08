@@ -49,19 +49,14 @@ function judge (num1, num2) {
 
 io.on("connection", (socket) => {
   socket.on("init", (payload) => {
-    console.log(payload)
-    if (isEmpty) {
-      participants.owner = payload
-      participants.owner.role = 'owner'
-      participants.owner.socket_id = socket.id
-      io.to(socket.id).emit('set role', 'owner')
-      isEmpty = false
-    } else {
-      participants.counter = payload
-      participants.counter.role = 'counter'
-      participants.counter.socket_id = socket.id
-      io.to(socket.id).emit('set role', 'counter')
-    }
+    const role = isEmpty ? 'owner' : 'counter';
+
+    participants[role] = payload
+    participants[role]['role'] = role
+    participants[role]['socket_id'] = socket.id
+    io.to(socket.id).emit('set role', role)
+
+    isEmpty = false
     console.log(participants)
   })
   socket.on("send message", (item) => {
@@ -69,7 +64,12 @@ io.on("connection", (socket) => {
 
     const counter = (item.role === 'owner') ? participants.counter : participants.owner
     const message = judge(counter.number, item.message)
-    io.emit("receive message", {nickname: counter.nickname, role: counter.role, message});
+
+    io.emit("receive message", {
+      nickname: counter.nickname,
+      role: counter.role,
+      message
+    });
   });
 })
 
