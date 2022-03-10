@@ -11,6 +11,7 @@ export default function GamePage() {
     role: '',
     message: '',
   });
+  const [turn, setTurn] = useState('');
 
   useEffect(() => {
     const {nickname, number} = window.history.state
@@ -37,14 +38,19 @@ export default function GamePage() {
       })
     })
 
+    socket.on('set turn', (turn) => {
+      setTurn(turn)
+    })
+
     return () => {
       socket.close()
     }
   }, [])
   return (
     <div className="App">
+      <p>{turn}</p>
       <ChatList role = {chat.role} chatList={chatList} />
-      <ChatInput chat={chat} setChat={setChat} />
+      <ChatInput chat={chat} setChat={setChat} turn={turn} />
     </div>
   );
 }
@@ -65,7 +71,7 @@ function ChatList({role, chatList}) {
   )
 }
 
-function ChatInput({chat, setChat}) {
+function ChatInput({chat, setChat, turn}) {
   const changeInput = (e) => {
     const {name, value} = e.target
     setChat(chat => {
@@ -73,7 +79,12 @@ function ChatInput({chat, setChat}) {
     })
   }
   const postChat = () => {
-    socket.emit('send message', {...chat})
+    if (turn === chat.role) {
+      socket.emit('send message', {...chat})
+      setChat(chat => {
+        return {...chat, message: ''}
+      })
+    }
   }
 
   return (

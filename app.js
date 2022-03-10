@@ -56,6 +56,8 @@ io.on("connection", (socket) => {
     participants[role]['socket_id'] = socket.id
     io.to(socket.id).emit('set role', role)
 
+    io.emit('set turn', 'owner')
+
     isEmpty = false
     console.log(participants)
   })
@@ -70,6 +72,8 @@ io.on("connection", (socket) => {
       role: counter.role,
       message
     });
+
+    io.emit('set turn', counter.role)
   });
 })
 
