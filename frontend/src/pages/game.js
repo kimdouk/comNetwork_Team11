@@ -14,6 +14,7 @@ export default function GamePage() {
   const [turn, setTurn] = useState('');
 
   useEffect(() => {
+    let myRole = ''
     const {nickname, number} = window.history.state
 
     setChat(chat => {
@@ -33,6 +34,8 @@ export default function GamePage() {
     })
 
     socket.on('set role', (role) => {
+      console.log('test')
+      myRole = role
       setChat(chat => {
         return {...chat, role}
       })
@@ -43,6 +46,7 @@ export default function GamePage() {
     })
 
     return () => {
+      socket.emit('leave', myRole)
       socket.close()
     }
   }, [])

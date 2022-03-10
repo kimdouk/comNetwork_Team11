@@ -8,6 +8,10 @@ const io = require('socket.io')(server, {
 
 let isEmpty = true;
 
+const isEmptyObj = (obj) => {
+  return Object.keys(obj).length === 0
+}
+
 const participants = {
   owner: {},
   counter: {}
@@ -75,6 +79,19 @@ io.on("connection", (socket) => {
 
     io.emit('set turn', counter.role)
   });
+  socket.on('leave', (role) => {
+    if (role === 'owner') {
+      io.to(participants.counter.socket_id).emit('set role', 'owner')
+      participants.owner = {...participants.counter}
+      participants.counter = {}
+    } else {
+      participants.counter = {}
+    }
+    const checkEmpty = isEmptyObj(participants.owner) && isEmptyObj(participants.counter)
+    if (checkEmpty) {
+      isEmpty = true
+    }
+  })
 })
 
 server.listen(727, () => {
