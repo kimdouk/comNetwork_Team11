@@ -83,10 +83,9 @@ io.on("connection", (socket) => {
     if (role === 'owner') {
       io.to(participants.counter.socket_id).emit('set role', 'owner')
       participants.owner = {...participants.counter}
-      participants.counter = {}
-    } else {
-      participants.counter = {}
     }
+    participants.counter = {}
+    
     const checkEmpty = isEmptyObj(participants.owner) && isEmptyObj(participants.counter)
     if (checkEmpty) {
       isEmpty = true
