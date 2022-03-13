@@ -28,9 +28,16 @@ export default function GamePage() {
 
     socket.on('receive message', (message) => {
       setChatList(chatList => chatList.concat(message))
-      
+
       const chatBox = document.querySelector(".chat-box")
-      chatBox.scrollTop = chatBox.scrollHeight
+      const chatWrapper = document.querySelector(".chat-wrapper")
+      const chatHeight = chatWrapper.clientHeight
+      console.log((chatBox.scrollTop + chatBox.clientHeight), chatBox.scrollHeight)
+      if ((chatBox.scrollTop + chatBox.clientHeight + chatHeight) > chatBox.scrollHeight) {
+        chatBox.scrollTop = chatBox.scrollHeight
+      } else {
+        console.log('new message')
+      }
     })
 
     socket.on('set role', (role) => {
