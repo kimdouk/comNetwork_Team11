@@ -59,7 +59,7 @@ export default function GamePage() {
   }, [])
   return (
     <div className="App">
-      <p>{turn}</p>
+      <h1  style={{marginLeft:'40px' }}>{turn}</h1>
       <ChatList role = {chat.role} chatList={chatList} />
       <ChatInput chat={chat} setChat={setChat} turn={turn} />
     </div>
@@ -74,7 +74,7 @@ function ChatList({role, chatList}) {
           <div key={index} className="chat-wrapper" style={{
             justifyContent: `${chat.role === role ? 'end' : 'start'}`
           }}>
-            <p className="chat">{chat.nickname}: {chat.message}</p>
+            <h4 className="chat">{chat.nickname}: {chat.message}</h4>
           </div>
         ))}
       </section>
@@ -100,8 +100,8 @@ function ChatInput({chat, setChat, turn}) {
 
   return (
     <div className="chat-input-wrapper">
-      <input name="message" value={chat.message} onChange={changeInput} />
-      <button onClick={postChat}>전송</button>
+      <input style={{ width : '200px', height : '50px',  fontSize : '20px'}}name="message" value={chat.message} onChange={changeInput} />
+      <button style={{padding: ".375rem .75rem",fontSize: "23px",}}onClick={postChat}>전송</button>
     </div>
   )
 }
