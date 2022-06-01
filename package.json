@@ -19,13 +19,13 @@
   "author": "",
   "license": "ISC",
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/9wan6zae/number-baseball.git"
+    "type": "git"
+    
   },
   "bugs": {
-    "url": "https://github.com/9wan6zae/number-baseball/issues"
+    
   },
-  "homepage": "https://github.com/9wan6zae/number-baseball#readme",
+  
   "keywords": [],
   "description": ""
 }
